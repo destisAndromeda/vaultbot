@@ -1,0 +1,29 @@
+{
+  "address": "8c8Pf3tJP8DQ94EYVS3j51qRMnVbzNpFpowmV828jeqG",
+  "metadata": {
+    "name": "vaultbot",
+    "version": "0.1.0",
+    "spec": "0.1.0",
+    "description": "Created with Anchor"
+  },
+  "instructions": [],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "InvalidAccount",
+      "msg": "Invalid Account"
+    }
+  ],
+  "constants": [
+    {
+      "name": "SEED_SMART_WALLET",
+      "type": "bytes",
+      "value": "[115, 109, 97, 114, 116, 95, 119, 97, 108, 108, 101, 116]"
+    },
+    {
+      "name": "SEED_VAULT",
+      "type": "bytes",
+      "value": "[118, 97, 117, 108, 116]"
+    }
+  ]
+}
