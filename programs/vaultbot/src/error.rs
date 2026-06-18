@@ -4,4 +4,6 @@ use anchor_lang::prelude::*;
 pub enum VaultbotError {
     #[msg("Invalid Account")] // 6000
     InvalidAccount,
+    #[msg("Invalid Amount")]  // 6001
+    InvalidAmount,
 }
