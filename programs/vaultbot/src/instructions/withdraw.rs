@@ -28,26 +28,28 @@ impl Withdraw<'_> {
         ctx: Context<Self>,
         amount: u64,
     ) -> Result<()> {
-        require_gt!(
-            amount,
-            Rent::get()?.minimum_balance(33),
+        let rent_exampt = Rent::get()?.minimum_balance(
+            ctx.accounts.vault.to_account_info().data_len(),
+        );
+        let vault_balance = ctx.accounts.vault.to_account_info().lamports();
+
+        require_gte!(
+            vault_balance,
+            amount + rent_exampt,
             VaultbotError::InvalidAmount,
         );
 
-        let transfer = system_program::Transfer {
-            from: ctx.accounts.vault.to_account_info(),
-            to:   ctx.accounts.owner.to_account_info(),
-        };
+        **ctx
+            .accounts
+            .vault
+            .to_account_info()
+            .try_borrow_mut_lamports()? -= amount;
 
-        let context = CpiContext::new(
-            ctx.accounts.system_program.key(),
-            transfer,
-        );
-
-        system_program::transfer(
-            context,
-            amount,
-        )?;
+        **ctx
+            .accounts
+            .vault
+            .to_account_info()
+            .try_borrow_mut_lamports()? += amount;
 
         Ok(())
     }
