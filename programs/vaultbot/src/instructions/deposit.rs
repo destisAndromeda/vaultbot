@@ -26,7 +26,7 @@ pub struct Deposit<'info> {
 impl Deposit<'_> {
     pub fn deposit(
         ctx: Context<Self>,
-        owner: Pubkey,
+        _owner: Pubkey,
         amount: u64,
     ) -> Result<()> {
         require_gt!(
