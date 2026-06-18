@@ -19,4 +19,12 @@ pub mod vaultbot {
     pub fn initialize_vault(ctx: Context<InitializeVault>) -> Result<()> {
         InitializeVault::initialize_vault(ctx)
     }
+
+    pub fn deposti(
+        ctx: Context<Deposit>,
+        owner: Pubkey,
+        amount: u64,
+    ) -> Result<()> {
+        Deposit::deposit(ctx, owner, amount)
+    }
 }
