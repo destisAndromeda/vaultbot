@@ -27,4 +27,11 @@ pub mod vaultbot {
     ) -> Result<()> {
         Deposit::deposit(ctx, owner, amount)
     }
+
+    pub fn withdraw(
+        ctx: Context<Withdraw>,
+        amount: u64,
+    ) -> Result<()> {
+        Withdraw::withdraw(ctx, amount)
+    }
 }
