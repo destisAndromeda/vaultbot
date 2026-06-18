@@ -6,7 +6,7 @@ resolution = true
 skip-lint = false
 
 [programs.localnet]
-vaultbot = "DJ3WkMuVRQJukvHetvKZfnQC9nczeT4wZdnHBC8pFc2h"
+vaultbot = "AVUZgWnjy1ePnMKRUeoGXz2vhixH9ZXDGGRwpS43gTmG"
 
 [provider]
 cluster = "localnet"

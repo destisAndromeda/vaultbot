@@ -175,17 +175,15 @@ fn test_withdraw() {
     let vault_balance_after = ctx.svm.get_balance(&vault_pda).unwrap();
 
     assert!(
-        owner_balance_after > owner_balance_before + amount,
+        owner_balance_after > owner_balance_before,
     );
 
-    // assert!(
-    //     vault_balance_after > vault_balance_before,
-    // );
+    assert!(
+        owner_balance_after <= owner_balance_before + amount,
+    );
 
-    // assert!(
-    //     vault_balance_after > Rent::default().minimum_balance(33),
-    // );
-
-    // let vault_account: Vault = ctx.get_account(&vault_pda).unwrap();
-    // assert_eq!(vault_account.owner, owner.pubkey());
+    assert_eq!(
+        vault_balance_before,
+        vault_balance_after + amount,
+    );
 }

@@ -47,7 +47,7 @@ impl Withdraw<'_> {
 
         **ctx
             .accounts
-            .vault
+            .owner
             .to_account_info()
             .try_borrow_mut_lamports()? += amount;
 

@@ -10,7 +10,7 @@ pub use instructions::*;
 pub use state::*;
 pub use error::*;
 
-declare_id!("DJ3WkMuVRQJukvHetvKZfnQC9nczeT4wZdnHBC8pFc2h");
+declare_id!("AVUZgWnjy1ePnMKRUeoGXz2vhixH9ZXDGGRwpS43gTmG");
 
 #[program]
 pub mod vaultbot {
