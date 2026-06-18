@@ -20,7 +20,7 @@ pub mod vaultbot {
         InitializeVault::initialize_vault(ctx)
     }
 
-    pub fn deposti(
+    pub fn deposit(
         ctx: Context<Deposit>,
         owner: Pubkey,
         amount: u64,

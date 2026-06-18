@@ -77,3 +77,51 @@ fn test_init_vault() {
     let vault_account: Vault = ctx.get_account(&vault_pda).unwrap();
     assert_eq!(vault_account.owner, user.pubkey());
 }
+
+#[test]
+fn test_deposit() {
+    let mut ctx = setup();
+    let owner = ctx.svm.create_funded_account(1_000_000_000).unwrap();
+    let vault_pda = get_vault_pda(owner.pubkey());
+
+    initialize_vault(&mut ctx, &owner);
+    let amount = Rent::default().minimum_balance(33) + 1_000_000;
+
+    let owner_balance_before = ctx.svm.get_balance(&owner.pubkey()).unwrap();
+    let vault_balance_before = ctx.svm.get_balance(&vault_pda).unwrap();
+
+    let ix = ctx
+        .program()
+        .accounts(accounts::Deposit {
+            signer: owner.pubkey(),
+            vault: vault_pda,
+            system_program: system_program::ID,
+        })
+        .args(args::Deposit {
+            owner: owner.pubkey(),
+            amount,
+        })
+        .instruction()
+        .unwrap();
+
+    let result = ctx.execute_instruction(ix, &[&owner]).unwrap();
+    result.assert_success();
+
+    let owner_balance_after = ctx.svm.get_balance(&owner.pubkey()).unwrap();
+    let vault_balance_after = ctx.svm.get_balance(&vault_pda).unwrap();
+
+    assert!(
+        owner_balance_after < owner_balance_before - amount,
+    );
+
+    assert!(
+        vault_balance_after > vault_balance_before,
+    );
+
+    assert!(
+        vault_balance_after > Rent::default().minimum_balance(33),
+    );
+
+    let vault_account: Vault = ctx.get_account(&vault_pda).unwrap();
+    assert_eq!(vault_account.owner, owner.pubkey());
+}
