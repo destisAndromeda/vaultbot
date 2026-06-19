@@ -1,69 +1,69 @@
 # vaultbot
 
-Telegram-бот для управления Solana vault через [grammy](https://grammy.dev) и [@solana/kit](https://github.com/anza-xyz/kit).
+Telegram bot for managing a Solana vault, built with [grammy](https://grammy.dev) and [@solana/kit](https://github.com/anza-xyz/kit).
 
-## Стек
+## Stack
 
 - **Bot framework:** grammy
-- **Solana:** @solana/kit (web3.js v2), без Anchor-клиента — инструкции собираются вручную из IDL
-- **Программа:** `vaultbot` (Anchor, Rust) — `programs/vaultbot`
+- **Solana:** @solana/kit (web3.js v2), no Anchor client — instructions are built manually from the IDL
+- **Program:** `vaultbot` (Anchor, Rust) — `programs/vaultbot`
 
-## Структура
+## Structure
 
 ```
 app/bot/
-  index.ts       — команды бота
-  rpc/rpc.ts      — сборка инструкций, PDA, отправка транзакций
-programs/vaultbot/ — Anchor-программа
+  index.ts       — bot commands
+  rpc/rpc.ts      — instruction building, PDA derivation, transaction sending
+programs/vaultbot/ — Anchor program
 ```
 
-## Установка
+## Install
 
 ```bash
 yarn install
 ```
 
-## Конфигурация
+## Configuration
 
-Создай `.env` в корне:
+Create a `.env` file in the project root:
 
 ```env
-BOT_TOKEN=токен_от_@BotFather
+BOT_TOKEN=token_from_@BotFather
 PROGRAM_ID=4m8Q5cy48fXkDowUDU4sVg3342KiimSqvid7emy5SfgP
 RPC_URL=http://127.0.0.1:8899
 RPC_WS_URL=ws://127.0.0.1:8900
 ```
 
-Для devnet используй `https://api.devnet.solana.com` и `wss://api.devnet.solana.com`.
+For devnet, use `https://api.devnet.solana.com` and `wss://api.devnet.solana.com`.
 
-> `.env` и `bot-keypair.json` в `.gitignore` — не коммить.
+> `.env` and `bot-keypair.json` are in `.gitignore` — don't commit them.
 
-## Запуск программы (localnet)
+## Running the program (localnet)
 
 ```bash
 anchor build
 anchor deploy
 ```
 
-## Запуск бота
+## Running the bot
 
 ```bash
 npx tsx app/bot/index.ts
 ```
 
-При первом запуске бот сгенерирует и сохранит свой keypair в `bot-keypair.json` — этот ключ владеет vault'ом.
+On first run, the bot generates and saves its own keypair to `bot-keypair.json` — this key owns the vault.
 
-## Команды
+## Commands
 
-| Команда | Описание |
+| Command | Description |
 |---|---|
-| `/start` | Показать публичный адрес бота |
-| `/initialize_vault` | Создать Vault PDA |
-| `/deposit <сумма>` | Депозит SOL в vault, напр. `/deposit 0.5` |
-| `/withdraw <сумма>` | Вывод SOL из vault |
-| `/balance` | Баланс кошелька бота |
+| `/start` | Show the bot's public address |
+| `/initialize_vault` | Create the Vault PDA |
+| `/deposit <amount>` | Deposit SOL into the vault, e.g. `/deposit 0.5` |
+| `/withdraw <amount>` | Withdraw SOL from the vault |
+| `/balance` | Show the bot wallet's balance |
 
-## Известные ограничения (MVP)
+## Known limitations (MVP)
 
-- Custodial-модель: бот сам хранит ключ и подписывает все транзакции — у пользователей нет собственного кошелька.
-- Один общий vault на бота, не per-user.
+- Custodial model: the bot holds the key and signs all transactions — users don't have their own wallets.
+- Single shared vault per bot, not per-user.
