@@ -1,3 +1,4 @@
+import "dotenv/config";
 import { Bot } from 'grammy';
 import {
   create_bot,
@@ -8,10 +9,11 @@ import {
   sol_to_lamports,
   withdraw_from_vault,
 } from './rpc/rpc';
-import config from '../../config.json' assert { type: 'json' };
 import { KeyPairSigner } from '@solana/kit';
 
-const bot = new Bot(config.bot_token);
+const BOT_TOKEN = process.env.BOT_TOKEN!;
+
+const bot = new Bot(BOT_TOKEN);
 let botSigner: KeyPairSigner;
 
 bot.command("start", async (ctx) => {
