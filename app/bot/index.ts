@@ -4,6 +4,9 @@ import {
   get_balance,
   initialize_vault,
   is_vault_initialized,
+  deposit_to_vault,
+  sol_to_lamports,
+  withdraw_from_vault,
 } from './rpc/rpc';
 import config from '../../config.json' assert { type: 'json' };
 import { KeyPairSigner } from '@solana/kit';
@@ -36,11 +39,75 @@ bot.command("initialize_vault", async (ctx) => {
 });
 
 bot.command("deposit", async (ctx) => {
-  await ctx.reply("processing...");
+  try {
+    if (!botSigner) {
+      await ctx.reply("No bot signer yet. Run /start first");
+      return;
+    }
+
+    const amountText = ctx.match.trim().split(/\s+/)[0];
+
+    if (!amountText) {
+      await ctx.reply("Usage: /deposit 1\nExample: /deposit 0.5");
+      return;
+    }
+
+    const { initialized, vault } = await is_vault_initialized(botSigner);
+
+    if (!initialized) {
+      await ctx.reply("Vault is not initialized yet. Run /initialize_vault first.");
+      return;
+    }
+
+    const amountLamports = sol_to_lamports(amountText);
+
+    await ctx.reply(`Depositing ${amountText} SOL...`);
+
+    const { signature } = await deposit_to_vault(botSigner, amountLamports);
+
+    await ctx.reply(
+      `Deposit success\nVault: ${vault}\nSignature: ${signature}`
+    );
+  } catch (err) {
+    console.error(err);
+    await ctx.reply("Failed to deposit");
+  }
 });
 
 bot.command("withdraw", async (ctx) => {
-  await ctx.reply("processing...");
+  try {
+    if (!botSigner) {
+      await ctx.reply("No bot signer yet. Run /start first");
+      return;
+    }
+
+    const amountText = ctx.match.trim().split(/\s+/)[0];
+
+    if (!amountText) {
+      await ctx.reply("Usage: /withdraw 1\nExample: /withdraw 0.5");
+      return;
+    }
+
+    const { initialized, vault } = await is_vault_initialized(botSigner);
+
+    if (!initialized) {
+      await ctx.reply("Vault is not initialized yet. Run /initialize_vault first.");
+      return;
+    }
+
+    const amountLamports = sol_to_lamports(amountText);
+
+    await ctx.reply(`Withdrawing ${amountText} SOL...`);
+
+    const { signature } = await withdraw_from_vault(botSigner, amountLamports);
+
+    await ctx.reply(
+      `Withdraw success\nVault: ${vault}\nSignature: ${signature}`
+    );
+  } catch (err) {
+    console.error(err);
+    await ctx.reply("Failed to withdraw");
+  }
 });
 
 bot.command("balance", async (ctx) => {
