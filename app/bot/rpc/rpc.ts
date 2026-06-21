@@ -44,26 +44,6 @@ const rpcSubscriptions = createSolanaRpcSubscriptions(RPC_WS_URL);
 export async function create_bot() {
   const secretKeyBytes = new Uint8Array(JSON.parse(requireEnv("SECRET_KEY")));
   const signer = await createKeyPairSignerFromBytes(secretKeyBytes);
-  // const botSigner = await generateKeyPairSigner();
-
-  // const balance = await rpc
-  //   .getBalance(botSigner.address, {
-  //     commitment: "confirmed",
-  //   })
-  //   .send();
-
-  // if (balance.value < lamports(1_000_000_000n)) {
-  //   const airdrop = airdropFactory({
-  //     rpc,
-  //     rpcSubscriptions,
-  //   });
-
-    // const signature = await airdrop({
-    //   recipientAddress: botSigner.address,
-    //   lamports: lamports(10_000_000_000n),
-    //   commitment: "confirmed",
-    // });
-  // }
 
   return signer;
 }

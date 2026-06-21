@@ -33,7 +33,8 @@ bot.command("initialize_vault", async (ctx) => {
 
     const result = await initialize_vault(botSigner);
     await ctx.reply(`Success\nVault:${vault}`);
-  
+    await ctx.reply(`Signature:${result}`);
+
   } catch (err) {
     console.error(err);
     await ctx.reply("Failed to initialize vault");
