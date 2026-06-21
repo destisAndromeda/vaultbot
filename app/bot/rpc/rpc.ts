@@ -23,38 +23,49 @@ import "dotenv/config";
 import idl from "../../../target/idl/vaultbot.json" assert { type: "json" };
 
 const LAMPORTS_PER_SOL = 1_000_000_000n;
-const PROGRAM = address(process.env.PROGRAM_ID!);
+
+function requireEnv(name: string): string {
+  const value = process.env[name];
+  if (!value) {
+    throw new Error(`Missing required env var: ${name}`);
+  }
+  return value;
+}
+
+const PROGRAM = address(requireEnv("PROGRAM_ID"));
 const SYSTEM_PROGRAM = address("11111111111111111111111111111111");
 
-  const rpc = createSolanaRpc(process.env.RPC_URL ?? "http://127.0.0.1:8899");
+const RPC_URL = process.env.RPC_URL ?? "http://127.0.0.1:8899";
+const RPC_WS_URL = process.env.RPC_WS_URL ?? "ws://127.0.0.1:8900";
 
-  const rpcSubscriptions = createSolanaRpcSubscriptions(
-    process.env.RPC_WS_URL ?? "ws://127.0.0.1:8900"
-  );
+const rpc = createSolanaRpc(RPC_URL);
+const rpcSubscriptions = createSolanaRpcSubscriptions(RPC_WS_URL);
 
 export async function create_bot() {
-  const botSigner = await generateKeyPairSigner();
+  const secretKeyBytes = new Uint8Array(JSON.parse(requireEnv("SECRET_KEY")));
+  const signer = await createKeyPairSignerFromBytes(secretKeyBytes);
+  // const botSigner = await generateKeyPairSigner();
 
-  const balance = await rpc
-    .getBalance(botSigner.address, {
-      commitment: "confirmed",
-    })
-    .send();
+  // const balance = await rpc
+  //   .getBalance(botSigner.address, {
+  //     commitment: "confirmed",
+  //   })
+  //   .send();
 
-  if (balance.value < lamports(1_000_000_000n)) {
-    const airdrop = airdropFactory({
-      rpc,
-      rpcSubscriptions,
-    });
+  // if (balance.value < lamports(1_000_000_000n)) {
+  //   const airdrop = airdropFactory({
+  //     rpc,
+  //     rpcSubscriptions,
+  //   });
 
-    const signature = await airdrop({
-      recipientAddress: botSigner.address,
-      lamports: lamports(10_000_000_000n),
-      commitment: "confirmed",
-    });
-  }
+    // const signature = await airdrop({
+    //   recipientAddress: botSigner.address,
+    //   lamports: lamports(10_000_000_000n),
+    //   commitment: "confirmed",
+    // });
+  // }
 
-  return botSigner;
+  return signer;
 }
 
 export async function is_vault_initialized(owner: KeyPairSigner) {
