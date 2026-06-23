@@ -28,14 +28,14 @@ impl Withdraw<'_> {
         ctx: Context<Self>,
         amount: u64,
     ) -> Result<()> {
-        let rent_exampt = Rent::get()?.minimum_balance(
+        let rent_exempt = Rent::get()?.minimum_balance(
             ctx.accounts.vault.to_account_info().data_len(),
         );
         let vault_balance = ctx.accounts.vault.to_account_info().lamports();
 
         require_gte!(
             vault_balance,
-            amount + rent_exampt,
+            amount + rent_exempt,
             VaultbotError::InvalidAmount,
         );
 
